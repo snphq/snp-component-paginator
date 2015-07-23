@@ -1,0 +1,23 @@
+{
+  "name": "snp-component-paginator",
+  "version": "0.0.1",
+  "homepage": "https://github.com/snphq/snp-component-paginator",
+  "authors": [
+    "Author name <alexey.krylov@saltpepper.ru>"
+  ],
+  "description": "snp-component-paginator component for generator-sp",
+  "main": "dist/PaginatorComponent.js",
+  "keywords": [
+    "generator-sp",
+    "component",
+    "backbone"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
