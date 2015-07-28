@@ -1,5 +1,6 @@
 define (require, exports, module)->
-  _List = require '../_List'
+  Backbone = require "backbone"
+  SuperView = MixinBackbone(Backbone.Epoxy.View)
 
 
 
@@ -13,7 +14,7 @@ define (require, exports, module)->
     model: SnpPaginateModel
 
 
-  SnpPaginateItem = _List.extend
+  SnpPaginateItem = SuperView.extend
     templateFunc: ->
       """
         <span data-js-number></span>
@@ -36,7 +37,7 @@ define (require, exports, module)->
     onClickElement: ->
       @model.set {active: true}
 
-  SnpPaginateList = _List.extend
+  class SnpPaginateList extends SuperView
     template: '#SnpPaginateList'
     className: 'snppaginate_list'
     bindings:
