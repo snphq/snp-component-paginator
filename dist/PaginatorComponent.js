@@ -1,7 +1,11 @@
 /*! snp-component-paginator 0.0.1 */
+var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
+
 define(function(require, exports, module) {
-  var SnpPaginateCollection, SnpPaginateItem, SnpPaginateList, SnpPaginateModel, _List;
-  _List = require('../_List');
+  var Backbone, SnpPaginateCollection, SnpPaginateItem, SnpPaginateList, SnpPaginateModel, SuperView;
+  Backbone = require("backbone");
+  SuperView = MixinBackbone(Backbone.Epoxy.View);
   SnpPaginateModel = Backbone.Epoxy.Model.extend({
     defaults: {
       page: 0,
@@ -12,7 +16,7 @@ define(function(require, exports, module) {
   SnpPaginateCollection = Backbone.Collection.extend({
     model: SnpPaginateModel
   });
-  SnpPaginateItem = _List.extend({
+  SnpPaginateItem = SuperView.extend({
     templateFunc: function() {
       return "<span data-js-number></span>\n<span data-js-separator>...</span>";
     },
@@ -35,14 +39,24 @@ define(function(require, exports, module) {
       });
     }
   });
-  return SnpPaginateList = _List.extend({
-    template: '#SnpPaginateList',
-    className: 'snppaginate_list',
-    bindings: {
+  return SnpPaginateList = (function(superClass) {
+    extend(SnpPaginateList, superClass);
+
+    function SnpPaginateList() {
+      return SnpPaginateList.__super__.constructor.apply(this, arguments);
+    }
+
+    SnpPaginateList.prototype.template = '#SnpPaginateList';
+
+    SnpPaginateList.prototype.className = 'snppaginate_list';
+
+    SnpPaginateList.prototype.bindings = {
       ':el': 'collection: $collection'
-    },
-    itemView: null,
-    initialize: function(arg) {
+    };
+
+    SnpPaginateList.prototype.itemView = null;
+
+    SnpPaginateList.prototype.initialize = function(arg) {
       var options;
       options = arg.options;
       if (this.collection == null) {
@@ -63,15 +77,18 @@ define(function(require, exports, module) {
         this.itemView = new SnpPaginateItem;
       }
       return this.listenTo(this.collection, 'change:active', this.onChangeActive);
-    },
-    onChangeActive: function(model) {
+    };
+
+    SnpPaginateList.prototype.onChangeActive = function(model) {
       this.setPage(model.get('page'));
       return this.trigger('changePage', model.get('page'));
-    },
-    setOptions: function(options) {
+    };
+
+    SnpPaginateList.prototype.setOptions = function(options) {
       return _.extend(this.options, options);
-    },
-    setPage: function(currentPage, totalPage) {
+    };
+
+    SnpPaginateList.prototype.setPage = function(currentPage, totalPage) {
       if (totalPage == null) {
         totalPage = this.options.totalPage;
       }
@@ -85,8 +102,9 @@ define(function(require, exports, module) {
       } else {
         return console.log("snp-component-paginator: invalid currentPage = " + currentPage + ", totalPage = " + totalPage);
       }
-    },
-    updatePageCollection: function() {
+    };
+
+    SnpPaginateList.prototype.updatePageCollection = function() {
       var endIndex, i, pageModels, results, startIndex;
       pageModels = [];
       if (this.options.totalPage > 1) {
@@ -152,6 +170,9 @@ define(function(require, exports, module) {
         }
       }
       return this.collection.reset(pageModels);
-    }
-  });
+    };
+
+    return SnpPaginateList;
+
+  })(SuperView);
 });
